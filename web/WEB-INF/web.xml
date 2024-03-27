@@ -60,6 +60,18 @@
         <servlet-name>AddToFavServlet</servlet-name>
         <servlet-class>AddToFavServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddToFavSoilServlet</servlet-name>
+        <servlet-class>AddToFavSoilServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddToFavEquipmentServlet</servlet-name>
+        <servlet-class>AddToFavEquipmentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddToFavPotServlet</servlet-name>
+        <servlet-class>AddToFavPotServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Business_Form</servlet-name>
         <url-pattern>/Business_Form</url-pattern>
@@ -128,8 +140,20 @@
         <servlet-name>AddToFavServlet</servlet-name>
         <url-pattern>/AddToFavServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToFavSoilServlet</servlet-name>
+        <url-pattern>/AddToFavSoilServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToFavEquipmentServlet</servlet-name>
+        <url-pattern>/AddToFavEquipmentServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddToFavPotServlet</servlet-name>
+        <url-pattern>/AddToFavPotServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
-    <session-timeout>30</session-timeout> <!-- Timeout in minutes -->
-</session-config>
-
+        <session-timeout>30</session-timeout>
+        <!-- Timeout in minutes -->
+    </session-config>
 </web-app>

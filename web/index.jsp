@@ -171,74 +171,13 @@
     </style>
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="logo2.png">
-                <img src="logo2.png" width="100" height="50"/>
-            </a>    
-
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Home</a>
-                    </li>
-                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="plant.jsp">Plants</a> 
-                    </li>
-
-                    
-                  <li class="nav-item">
-                        <a class="nav-link" href="businessjsp.jsp">Business</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                   Many More
-                  </a>
-          <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="try.jsp">Try</a></li>
-            <li><a class="dropdown-item" href="cart.jsp">MY CART</a></li>
-            <li><a class="dropdown-item" href="soil_fertizer.jsp">Soil/Fertilizers</a></li>
-            <li><a class="dropdown-item" href="pots.jsp">Pots/Decorators</a></li>
-            <li><a class="dropdown-item" href="equipment.jsp">Garden Equipments</a></li>
-            
-          </ul>
-        </li>
-         <%  String email = (String) session.getAttribute("email");%>
-         <%
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String formattedDate = dateFormat.format(currentDate);
-    %>
-                </ul>
-                <div class="mx-10">
-                    <div>
-                        <p class="email"> <%= email %> &nbsp; Lastlogin: <%= formattedDate %>  </p>   
-                     
-                    </div>
-                    <a href="cart.jsp"style="margin-right: 10px;"><img src="cart.png" width="30" height="30" alt="My Cart"/></a>
-                     <a href="add_to_favourite.jsp"style="margin-right: 10px;"><img src="fav.png" width="30" height="30" alt="Add to Favorites"/></a>
-                   
-                    
-                    
-                    <a class="btn btn-outline-light" href="signup.jsp">Sign Up</a>
-                <a class="btn btn-outline-light" href="signin.jsp" style="margin-left: 10px">Sign In</a>
-                
-                </div>
-            </div>
-        </div>
-    </nav>
-
+    <jsp:include page="navbar.jsp" />
+   
     <div class="live-image">
         <img src="img2.jpg" alt="Growing Tree Image">
         <div class="quote-container">
             <p>"Grow Your Heart With Gardening"</p>
-            <button class="btn btn-shop-now">Explore Now..</button>
+            <a href="plant.jsp">  <button class="btn btn-shop-now">Explore Now..</button></a>
         </div>
     </div>
 

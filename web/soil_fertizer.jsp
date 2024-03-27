@@ -27,6 +27,15 @@
             width: 100%;
             height: auto;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .button-container button {
+            flex: 1;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -37,12 +46,29 @@
     <div class="container-fluid mb-2">
         <div class="search-bar-container">
             <span class="search-label">Search Here:</span>
-            <input type="text" class="form-control search-bar">
+            <form method="get" action="soil_fertizer.jsp">
+                <input class="form-control search-bar" type="text" name="searchKeyword" placeholder="Enter name to search"><br>
+                <button class='btn btn-success' type="submit">Search</button>
+            </form>
+            
+            <form method="get" action="soil_fertizer.jsp" class="container-fluid my-20">
+                <input type="checkbox" name="sortAscending" value="true">Sort Ascending
+                <input type="checkbox" name="sortDescending" value="true">Sort Descending
+                <button class='btn btn-success' type="submit">Apply Sort</button>
+            </form>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row my-10">
         <% 
+            String searchKeyword = request.getParameter("searchKeyword");
+            if (searchKeyword == null) {
+                searchKeyword = "";
+            }
+            
+            String sortAscending = request.getParameter("sortAscending");
+            String sortDescending = request.getParameter("sortDescending");
+        
             String url = "jdbc:mysql://localhost:4306/web_plant";
             String username = "root";
             String password = "";
@@ -51,7 +77,20 @@
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 Connection connection = DriverManager.getConnection(url, username, password);
                 Statement statement = connection.createStatement();
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM soil");
+                
+                String query = "SELECT * FROM soil";
+                
+                if (!searchKeyword.isEmpty()) {
+                    query += " WHERE type LIKE '%" + searchKeyword + "%'";
+                }
+                
+                if (sortAscending != null) {
+                    query += " ORDER BY amount ASC";
+                } else if (sortDescending != null) {
+                    query += " ORDER BY amount DESC";
+                }
+                
+                ResultSet resultSet = statement.executeQuery(query);
 
                 int count = 0;
 
@@ -72,11 +111,12 @@
                 <img src="images/<%= fileName %>" class="card-img-top" >
                 <div class="card-body">
                    
-                    <p class="card-text"><b>Amount:</b> <%= amount %></p>
-                    <p class="card-text"><b>Type:</b> <%= soilType %></p>
+                   
+                    <h5 class="card-text"> <%= soilType %></h5><br>
                     <p class="card-text"><b>Description:</b> <%= soilDisc %></p>
                     <p class="card-text"><b>Characteristics:</b> <%= soilChar %></p>
                     <p class="card-text"><b>Good For:</b> <%= goodFor %></p>
+                     <p class="card-text"><b>Amount:</b> <%= amount %></p>
                     <div class="quantity-container">
                         <input type="hidden" name="email" value="<%= email %>">
                         <input type="hidden" name="soil_name" value="<%= soilType %>">
@@ -86,10 +126,21 @@
                         <input type="hidden" name="description" value="<%= soilDisc %>">
                         <input type="hidden" name="characteristics" value="<%= soilChar %>">
                         <input type="hidden" name="good_for" value="<%= goodFor %>">
-                        <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        <div class="button-container">
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                                            </form>
+
+                            <form action='AddToFavSoilServlet' method='post'>
+                                <input type="hidden" name="email" value="<%= email %>">
+                                <input type="hidden" name="soil_name" value="<%= soilType %>">
+                                <input type="hidden" name="description" value="<%= soilDisc %>">
+                                <input type="hidden" name="amount" value="<%= amount %>">
+                                <input type="hidden" name="image_path" value="<%= fileName %>">
+                                <button type="submit" class="btn btn-success">Add to Favorite</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
-                </form>
             </div>
         </div>
 
@@ -112,6 +163,4 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-</body>
-</html>
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6

@@ -6,6 +6,7 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.DriverManager" %>
 <%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="java.text.DecimalFormat" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -184,14 +185,14 @@ try {
                         <div class="flexing mx-10">
                             <%-- Form for removing item --%>
                             <form action="DeleteItemServlet" method="post">
-                                <input type="hidden" name="plant_name" value="<%= soilName %>">
+                                <input type="hidden" name="SoilType" value="<%= soilName %>">
                                 <button class="btn btn-danger">Remove</button>
                             </form>
                         </div>
                         <div>
                             <%-- Form for updating quantity --%>
                             <form action="UpdateItemServlet" method="post">
-                                <input type="hidden" name="plant_name" value="<%= soilName %>">
+                                <input type="hidden" name="SoilType" value="<%= soilName %>">
                                 <input type="number" name="qty" value="<%= qty %>" min="1" max="10">
                                 <button type="submit" class="btn btn-primary">Update</button>
                             </form>
@@ -292,9 +293,31 @@ try {
 </div>
 <% } %>
 
-<div class="grand-total">
+<%
+// Calculate grand total for updation 
+DecimalFormat df = new DecimalFormat("#.##");
+String grandTotalFormatted = df.format(grandTotal);
+
+// Set grand total in session attribute
+session.setAttribute("grandTotal", grandTotalFormatted);
+%>
+<div>
+   <div class="grand-total">
     <h3>Grand Total: <%= grandTotal %></h3>
-</div><br>
+</div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <a href="checkout.jsp" class="btn btn-success btn-lg">Checkout</a>
+        </div>
+    </div>
+</div>
+ 
+<div>
+
+
+
 
 <%
 }

@@ -20,14 +20,14 @@ public class AddToFavServlet extends HttpServlet {
        
          HttpSession session = request.getSession();
          String  email= (String) session.getAttribute("email");
-//        String email = request.getParameter("email");
+
         String plantName = request.getParameter("plant_name");
         String plantCare = request.getParameter("plant_care");
         String price = request.getParameter("price");
         String imagePath = request.getParameter("image_path");
         Integer qty =  1 ; 
         
-//        String quantity = request.getParameter("quantity");
+
 
         String url = "jdbc:mysql://localhost:4306/web_plant";
         String username = "root";
@@ -39,7 +39,7 @@ try {
     Class.forName("com.mysql.cj.jdbc.Driver");
     Connection connection = DriverManager.getConnection(url, username, password);
 
-    // Check if the record already exists
+ 
     String checkQuery = "SELECT COUNT(*) AS count FROM fav_plant WHERE email=? AND plant_name=?";
    PreparedStatement ps = connection.prepareStatement(checkQuery);
             ps.setString(1, email);
@@ -69,7 +69,7 @@ try {
     connection.close();
 } catch (Exception e) {
     out.println("error" + e);
-    // Redirect to an error page
+ 
 }
     }
 }

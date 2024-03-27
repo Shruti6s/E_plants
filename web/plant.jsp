@@ -1,10 +1,6 @@
-
-
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
 <%@ page session="true" %>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -31,25 +27,35 @@
             width: 100%;
             height: 180px;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        .button-container button {
+            flex: 1;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
       <jsp:include page="navbar.jsp" />
+      
 <div class="container">
     <h2 class="page-heading">Plant Details</h2>
 
     <div class="container-fluid mb-2">
         <div class="search-bar-container">
             <span class="search-label">Search Here:</span>
-              <form method="get" action="plant.jsp">
-                  <input class="form-control search-bar" type="text" name="searchKeyword" placeholder="Enter name to search"><br>
+            <form method="get" action="plant.jsp">
+                <input class="form-control search-bar" type="text" name="searchKeyword" placeholder="Enter name to search"><br>
                 <button class='btn btn-success' type="submit">Search</button>
             </form>
             
             <form method="get" action="plant.jsp" class="container-fluid my-20">
-                <input  type="checkbox" name="sortAscending" value="true">Sort Ascending
+                <input type="checkbox" name="sortAscending" value="true">Sort Ascending
                 <input type="checkbox" name="sortDescending" value="true">Sort Descending
-                <button  class='btn btn-success' type="submit">Apply Sort</button>
+                <button class='btn btn-success' type="submit">Apply Sort</button>
             </form>
         </div>
     </div>
@@ -106,32 +112,29 @@
                         <p class="card-text"><%= plantCare %></p>
                         <p class="card-text"><b>Amount:</b> <%= amount %></p>
                         <div class="quantity-container">
-                                <input type="hidden" id="name" name="email" value="<%= email %>">
-                                <input type="hidden"  id="plant_name" name="plant_name" value="<%= plantName %>">
-                                <input type="hidden" id="plant_care" name="plant_care" value="<%= plantCare %>">
-                                <input type="hidden" id="price" name="price" value="<%= amount %>">
-                                <input type="hidden" id="image_path" name="image_path" value="<%= imageName %>">
-                                <button type="submit" class="btn btn-primary">Add to Cart</button>
-    
-               
-                           
+                            <input type="hidden" id="name" name="email" value="<%= email %>">
+                            <input type="hidden" id="plant_name" name="plant_name" value="<%= plantName %>">
+                            <input type="hidden" id="plant_care" name="plant_care" value="<%= plantCare %>">
+                            <input type="hidden" id="price" name="price" value="<%= amount %>">
+                            <input type="hidden" id="image_path" name="image_path" value="<%= imageName %>">
+                        </div>
+
+                        <div class="button-container">
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>    
+                            </form>
+
+                            <form action='AddToFavServlet' method='post'>
+                                <input type="hidden" name="email" value="<%= email %>">
+                                <input type="hidden" name="plant_name" value="<%= plantName %>">
+                                <input type="hidden" name="plant_care" value="<%= plantCare %>">
+                                <input type="hidden" name="price" value="<%= amount %>">
+                                <input type="hidden" name="image_path" value="<%= imageName %>">
+                                <button type="submit" class="btn btn-success">Add to Favorite</button>
+                            </form>
+                        </div>
                     </div>
-                </form>
-                 <form action='AddToFavServlet' method='post'>
-                <input type="hidden" name="email" value="<%= email %>">
-                <input type="hidden" name="plant_name" value="<%= plantName %>">
-                <input type="hidden" name="plant_care" value="<%= plantCare %>">
-                <input type="hidden" name="price" value="<%= amount %>">
-                <input type="hidden" name="image_path" value="<%= imageName %>">
-                <button type="submit" class="btn btn-success">Add to Favorite</button>
-            </form>        
-                    </div>
-              
-                 
             </div>
-                        
         </div>
-               
 
         <%  
                 count++;
@@ -152,6 +155,5 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>

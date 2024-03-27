@@ -1,298 +1,203 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.sql.*" %>
+<%@ page session="true" %>
+<%@ page import="jakarta.servlet.http.HttpSession" %>
 <!DOCTYPE html>
-<%@page import="java.sql.*" %>
-
-<%
-    if(request.getParameter("submit") != null)
-    {
-        String name=request.getParameter("name");
-        String mnumber=request.getParameter("mnumber");
-        String price=request.getParameter("amount");
-        String pic="image_url";
-        String ctgr="plant";
-        
-     
-        String plant_name=request.getParameter("plant_name");
-        String plant_care=request.getParameter("plant_care");
-        
-        
-    Connection con ;
-    PreparedStatement pst ; 
-    ResultSet rs ;
-
-    Class.forName("com.mysql.jdbc.Driver") ;
-    con = DriverManager.getConnection("jdbc:mysql://localhost:3306/web_plant" , "root" , "");
-
-    pst = con.prepareStatement("insert into plants(name,mnumber,amount,cat,image_url,plant,care) values (?,?,?,?,?,?,?)");
-    pst.setString(1,name);
-    pst.setString(2,mnumber);
-    pst.setString(3,price);
-    pst.setString(4,ctgr);
-    pst.setString(5,pic);
-    pst.setString(6,plant_name);
-    pst.setString(7,plant_care);
-    pst.executeUpdate();
-    
-%>
-<script>
-    alert("record addedd...");
-    </script>
-    <%
-        }
-    %>
-    
 <html lang="en">
-   
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <title>Product Selling Form</title>
-    <style>
-       
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <style>
+        body {
+            background-color: #f8f9fa;
+        }
 
-        .additional-fields {
-            display: none;
+        .card-img {
+            width: 200px;
+            height: 245px;
+            object-fit: cover;
         }
-   
-    
-        body { background-color: #f8f9fa; }
-        .container {
-            max-width: 500px;
-            margin: auto;
+
+        .heading {
+            text-align: center;
+            color: #28a745;
             margin-top: 50px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            justify-content: center;
+            align-items: center;
+            height: 280px;
+        }
+
+        .grand-total {
+            margin-top: 50px;
             padding: 20px;
-            border-radius: 10px;
-            background-color: #ffffff;
+            background-color: #28a745;
+            color: #ffffff;
+            border-radius: 5px;
+            text-align: center;
         }
-        h2 {
-            color: #76B947;
-             text-align: center;
+
+        .flexing {
+            align-content: center;
+            justify-content: center;
+            display: flex;
+            margin-left: 10px;
+            margin-right: 10px;
         }
-        label {
-            font-weight: bold;
-        }
-        .btn-primary {
-            background-color: #007bff;
-            border-color: #007bff;
-        }
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-        .custom-file-label::after { content: "Choose File"; }
     </style>
 </head>
 <body>
+<jsp:include page="navbar.jsp" />
 
-<div class="container">
-    <h2 class="mb-4">Product Selling Form</h2>
-    <form onsubmit="return validateForm()"
-           action="UploadImageServleat"
-            method="post"
-            enctype="multipart/form-data">
-        
-         <div class="form-group">
-          <label for="name">Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="name"
-            name="name"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="mobile">Mobile Number:</label>
-          <input
-            type="tel"
-            class="form-control"
-            id="mobile"
-            name="mobile"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="amount">Amount:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="amount"
-            name="amount"
-            required
-          />
+<h2 class="mb-4 heading">My Favorites</h2>
 
-         <div class="form-group">
-          <label for="image">Image:</label>
-          <input
-            type="file"
-            class="form-control-file"
-            id="image"
-            name="image_url"
-            accept="image/jpeg"
-            required
-          />
-        </div>
+<%
+// Get user's email from session
+String email = (String) session.getAttribute("email");
 
-        <div class="form-group">
-            <label>What do you want to sell?</label>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="plant" id="Plants" value="Plants" onclick="showPlantFields()">
-                <label class="form-check-label" for="Plants">Plants</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="pot" id="Pots" value="Pots" onclick="showPotFields()">
-                <label class="form-check-label" for="Pots">Pots/Decorators</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="soil" id="Soil" value="Soil" onclick="showSoilFields()">
-                <label class="form-check-label" for="Soil">Soil</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="eqp" id="Equipments" value="Equipments" onclick="showEquipmentsFields()">
-                <label class="form-check-label" for="Equipments">Garden Equipments</label>
-            </div>
-        </div>
+// Database connection parameters
+String url = "jdbc:mysql://localhost:4306/web_plant";
+String username = "root";
+String password = "";
 
-  
-        <div class="additional-fields" id="plantFields">
-            
-         <div class="form-group">
-          <label for="plantName">Plant Name:</label>
-          <input
-            type="text"
-            class="form-control"
-            id="plantName"
-            name="plantName"
-            required
-          />
-        </div>
-        <div class="form-group">
-          <label for="plantCare">Plant Care:</label>
-          <textarea
-            class="form-control"
-            id="plantCare"
-            name="plantCare"
-            rows="3"
-            required
-          ></textarea>
-           
-        </div>
+// Initialize grand total
+double grandTotal = 0;
 
-    
-        <div class="additional-fields" id="potFields">
-            <div class="form-group">
-                <label for="potCategory">Category:</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="potCategory" id="ceramic" value="Ceramic">
-                    <label class="form-check-label" for="ceramic">Ceramic</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="potCategory" id="clay" value="Clay">
-                    <label class="form-check-label" for="clay">Clay</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="potCategory" id="plasticFiber" value="Plastic Fiber">
-                    <label class="form-check-label" for="plasticFiber">Plastic Fiber</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="color">Color:</label>
-                <input type="text" class="form-control" id="color" placeholder="Enter color">
-            </div>
-            <div class="form-group">
-                <label for="type">Type:</label>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="potType" id="decorative" value="Decorative">
-                    <label class="form-check-label" for="decorative">Decorative</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="potType" id="classic" value="Classic">
-                    <label class="form-check-label" for="classic">Classic</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="potType" id="handmade" value="Handmade">
-                    <label class="form-check-label" for="handmade">Handmade</label>
-                </div>
-            </div>
-        </div>
-
-      
-        <div class="additional-fields" id="soilFields">
-            <div class="form-group">
-                <label for="soilType">Type:</label>
-                <input type="text" class="form-control" id="soilType" placeholder="Enter soil type">
-            </div>
-            <div class="form-group">
-                <label for="soilDescription">Description:</label>
-                <textarea class="form-control" id="soilDescription" placeholder="Enter soil description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="characteristics">Characteristics:</label>
-                <textarea class="form-control" id="characteristics" placeholder="Enter characteristics"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="goodFor">Good For:</label>
-                <input type="text" class="form-control" id="goodFor" placeholder="Enter good for information">
-            </div>
-        </div>
-
-       
-        <div class="additional-fields" id="equipmentsFields">
-            <div class="form-group">
-                <label for="equipmentsDescription">Description:</label>
-                <textarea class="form-control" id="equipmentsDescription" placeholder="Enter equipments description"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="usage">Usage:</label>
-                <input type="text" class="form-control" id="usage" placeholder="Enter usage information">
-            </div>
-        </div>
-
-
-
-        <button type="submit" name="submit" class="btn btn-success">Submit</button>
-    </form>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
+try {
    
+    Class.forName("com.mysql.cj.jdbc.Driver");
+    
+   
+    Connection connection = DriverManager.getConnection(url, username, password);
 
-    function showPlantFields() {
-        document.getElementById('plantFields').style.display = 'block';
-        document.getElementById('potFields').style.display = 'none';
-        document.getElementById('soilFields').style.display = 'none';
-        document.getElementById('equipmentsFields').style.display = 'none';
+    // Fetch data from fav_plant table
+    PreparedStatement plantPs = connection.prepareStatement("SELECT * FROM fav_plant WHERE email = ?");
+    plantPs.setString(1, email);
+    ResultSet plantResultSet = plantPs.executeQuery();
+
+    // Fetch data from fav_pots table
+    PreparedStatement potsPs = connection.prepareStatement("SELECT * FROM fav_pots WHERE email = ?");
+    potsPs.setString(1, email);
+    ResultSet potsResultSet = potsPs.executeQuery();
+
+    // Fetch data from fav_soil table
+    PreparedStatement soilPs = connection.prepareStatement("SELECT * FROM fav_soil WHERE email = ?");
+    soilPs.setString(1, email);
+    ResultSet soilResultSet = soilPs.executeQuery();
+
+    // Fetch data from fav_equipment table
+    PreparedStatement equipmentPs = connection.prepareStatement("SELECT * FROM fav_equipment WHERE email = ?");
+    equipmentPs.setString(1, email);
+    ResultSet equipmentResultSet = equipmentPs.executeQuery();
+   
+%>
+
+<%
+    // Display favorite plants
+    while (plantResultSet.next()) {
+%>
+        <div class="container mt-4">
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <% String imageName = plantResultSet.getString("image"); %>
+                        <img src="images/<%= imageName %>" width="200" height="200" class="card-img" alt="Plant Image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <% String plantName = plantResultSet.getString("plant_name"); %>
+                            <h5 class="card-title"><%= plantName %></h5>
+                            <% String plantcare = plantResultSet.getString("plant_care"); %>
+                            <p><%= plantcare %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<%
     }
+    plantResultSet.close();
+    plantPs.close();
+%>
 
-    function showPotFields() {
-        document.getElementById('plantFields').style.display = 'none';
-        document.getElementById('potFields').style.display = 'block';
-        document.getElementById('soilFields').style.display = 'none';
-        document.getElementById('equipmentsFields').style.display = 'none';
+<%
+    // Display favorite pots
+    while (potsResultSet.next()) {
+%>
+        <div class="container mt-4">
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <% String imageName = potsResultSet.getString("image"); %>
+                        <img src="images/<%= imageName %>" width="200" height="200" class="card-img" alt="Pot Image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <% String potCategory = potsResultSet.getString("pot_category"); %>
+                            <h5 class="card-title"><%= potCategory %> Pot</h5>
+                            <% String potType = potsResultSet.getString("pot_type"); %>
+                            <p><%= potType %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<%
     }
+    potsResultSet.close();
+    potsPs.close();
+%>
 
-    function showSoilFields() {
-        document.getElementById('plantFields').style.display = 'none';
-        document.getElementById('potFields').style.display = 'none';
-        document.getElementById('soilFields').style.display = 'block';
-        document.getElementById('equipmentsFields').style.display = 'none';
-        
-        
-        
+<%
+    // Display favorite soil
+    while (soilResultSet.next()) {
+%>
+        <div class="container mt-4">
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <% String imageName = soilResultSet.getString("image"); %>
+                        <img src="images/<%= imageName %>" width="200" height="200" class="card-img" alt="Soil Image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <% String soilName = soilResultSet.getString("soil_name"); %>
+                            <h5 class="card-title"><%= soilName %> Soil</h5>
+                            <% String description = soilResultSet.getString("description"); %>
+                            <p><%= description %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<%
     }
+    soilResultSet.close();
+    soilPs.close();
+%>
 
-    function showEquipmentsFields() {
-        document.getElementById('plantFields').style.display = 'none';
-        document.getElementById('potFields').style.display = 'none';
-        document.getElementById('soilFields').style.display = 'none';
-        document.getElementById('equipmentsFields').style.display = 'block';
-    }
-</script>
-
-</body>
-</html>
+<%
+    // Display favorite equipment
+    while (equipmentResultSet.next()) {
+%>
+        <div class="container mt-4">
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <% String imageName = equipmentResultSet.getString("image"); %>
+                        <img src="images/<%= imageName %>" width="200" height="200" class="card-img" alt="Equipment Image">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <% String equipmentName = equipmentResultSet.getString("equipment_name"); %>
+                            <h5 class="card-title"><%= equipmentName %></h5>
+                            <% String description = equipmentResultSet.getString("description"); %>
+                            <p><%= description %></p>
+                        </div>
+                    </div>
+                </div>
+            </div>

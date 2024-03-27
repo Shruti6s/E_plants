@@ -8,7 +8,6 @@ public class signin extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
     }
 
     @Override
@@ -23,13 +22,10 @@ public class signin extends HttpServlet {
         PrintWriter pw = response.getWriter();
         processRequest(request, response);
 
-        
         HttpSession session = request.getSession(false);
         if (session != null && session.getAttribute("email") != null) {
-                
-
             response.sendRedirect("index.jsp");
-            return; 
+            return;
         }
 
         String email = request.getParameter("email");
@@ -48,7 +44,7 @@ public class signin extends HttpServlet {
             response.sendRedirect("index.jsp");
         } else {
             pw.print("Sorry!!!\nUsername or Password incorrect");
-            request.getRequestDispatcher("signin.jsp").include(request, response);
+            response.sendRedirect("signin.jsp"); 
         }
         pw.close();
     }
@@ -68,7 +64,7 @@ public class signin extends HttpServlet {
             ex.printStackTrace();
         }
         return status;
-    } 
+    }
 
     @Override
     public String getServletInfo() {
